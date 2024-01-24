@@ -1,6 +1,8 @@
 # jsonbagger
 
-The `jsonbagger` package provides a simple yet effective solution for extracting JSON objects from strings in Go. It is particularly useful when dealing with raw data streams or logs where JSON data needs to be isolated from non-JSON content. This package offers two primary functions: `ExtractJSON` and `ExtractJSONIndexes`, both aimed at identifying and extracting JSON objects.
+The `jsonbagger` package provides a simple yet effective solution for extracting JSON objects from strings in Go. It is ideal for dealing with raw data streams or logs where JSON data needs to be isolated from non-JSON content. This package offers two primary functions: `ExtractJSON` and `ExtractJSONIndexes`, both aimed at identifying and extracting JSON objects.
+
+The `jsonbagger` package is especially useful when handling responses from Large Language Models (LLMs) that occasionally include additional comments or text alongside JSON objects. This "noisy" response can cause standard functions like `json.Unmarshal()` to fail due to the presence of non-JSON text. `jsonbagger` efficiently extracts the clean JSON object from such responses, ensuring compatibility with JSON processing functions.
 
 ## Installation
 
