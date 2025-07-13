@@ -1,4 +1,5 @@
 [![Go CI](https://github.com/kaatinga/jsonbagger/actions/workflows/test.yml/badge.svg)](https://github.com/kaatinga/jsonbagger/actions/workflows/test.yml)
+[![MIT license](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/kaatinga/jsonbagger/blob/main/LICENSE.md)
 
 # jsonbagger
 
