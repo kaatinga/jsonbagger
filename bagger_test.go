@@ -1,6 +1,9 @@
 package jsonbagger
 
-import "testing"
+import (
+	"errors"
+	"testing"
+)
 
 func TestExtractJSON(t *testing.T) {
 	tests := []struct {
@@ -25,5 +28,79 @@ func TestExtractJSON(t *testing.T) {
 				t.Errorf("ExtractJSON() got:\n%s\nWant:\n%s\n", got, tt.want)
 			}
 		})
+	}
+}
+
+func TestExtractJSON_EdgeCases(t *testing.T) {
+	tests := []struct {
+		name    string
+		input   string
+		want    string
+		wantErr bool
+	}{
+		{"empty string", "", "", true},
+		{"only opening brace", "foo { bar", "", true},
+		{"only closing brace", "foo } bar", "", true},
+		{"unmatched braces", "foo { bar } }", "{ bar }", false},
+		{"braces with non-JSON content", "foo {bar} baz", "{bar}", false},
+		{"json at end", "foo bar {\"a\":1}", "{\"a\":1}", false},
+		{"malformed json, no closing", "foo {\"a\":1", "", true},
+		{"malformed json, no opening", "foo \"a\":1}", "", true},
+		{"deeply nested (max 255)", func() string {
+			s := ""
+			for i := 0; i < 255; i++ {
+				s += "{"
+			}
+			s += "1"
+			for i := 0; i < 255; i++ {
+				s += "}"
+			}
+			return s
+		}(), func() string {
+			s := ""
+			for i := 0; i < 255; i++ {
+				s += "{"
+			}
+			s += "1"
+			for i := 0; i < 255; i++ {
+				s += "}"
+			}
+			return s
+		}(), false},
+		{"overflow nesting (256)", func() string {
+			s := ""
+			for i := 0; i < 256; i++ {
+				s += "{"
+			}
+			s += "1"
+			for i := 0; i < 256; i++ {
+				s += "}"
+			}
+			return s
+		}(), "", true},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got, err := ExtractJSON(tt.input)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("ExtractJSON() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			if got != tt.want {
+				t.Errorf("ExtractJSON() got:\n%s\nWant:\n%s\n", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestNotFoundError_Is(t *testing.T) {
+	err := ErrNotFound
+	if !errors.Is(err, ErrNotFound) {
+		t.Errorf("errors.Is failed: expected true for ErrNotFound")
+	}
+
+	var someOtherError error = errors.New("not found")
+	if errors.Is(someOtherError, ErrNotFound) {
+		t.Errorf("errors.Is failed: expected false for unrelated error")
 	}
 }

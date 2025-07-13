@@ -2,7 +2,7 @@ package jsonbagger
 
 // ExtractJSON returns the first JSON object found in the input string.
 func ExtractJSON(input string) (string, error) {
-	begin, end, err := ExtractJSONIndexes(input)
+	begin, end, err := extractJSONIndexes(input)
 	if err != nil {
 		return "", err
 	}
@@ -10,12 +10,16 @@ func ExtractJSON(input string) (string, error) {
 	return input[begin:end], nil
 }
 
-// ExtractJSONIndexes returns the indexes of the first JSON object found in the input string.
-func ExtractJSONIndexes(input string) (begin, end int, err error) {
+// extractJSONIndexes returns the indexes of the first JSON object found in the input string.
+func extractJSONIndexes(input string) (begin, end int, err error) {
 	var jsonFound bool
-	var count uint16
+	var count uint8
 	for i, character := range input {
 		if character == '{' {
+			if count == 255 {
+				err = ErrNestingOverflow
+				return
+			}
 			count++
 			if !jsonFound {
 				begin = i
