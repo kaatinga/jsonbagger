@@ -1,3 +1,5 @@
+[![Go CI](https://github.com/kaatinga/jsonbagger/actions/workflows/test.yml/badge.svg)](https://github.com/kaatinga/jsonbagger/actions/workflows/test.yml)
+
 # jsonbagger
 
 The `jsonbagger` package provides a simple yet effective solution for extracting JSON objects from strings in Go. It is ideal for dealing with raw data streams or logs where JSON data needs to be isolated from non-JSON content. This package offers a primary function: `ExtractJSON`, aimed at identifying and extracting JSON objects.
