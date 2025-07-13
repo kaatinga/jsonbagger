@@ -12,3 +12,16 @@ func (err NotFoundError) Is(target error) bool {
 }
 
 const ErrNotFound NotFoundError = 0
+
+type NestingOverflowError byte
+
+func (err NestingOverflowError) Error() string {
+	return "nesting level overflow"
+}
+
+func (err NestingOverflowError) Is(target error) bool {
+	_, ok := target.(NestingOverflowError)
+	return ok
+}
+
+const ErrNestingOverflow NestingOverflowError = 0
