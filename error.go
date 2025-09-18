@@ -1,27 +1,8 @@
 package jsonbagger
 
-type NotFoundError byte
+import "errors"
 
-func (err NotFoundError) Error() string {
-	return "not found"
-}
-
-func (err NotFoundError) Is(target error) bool {
-	_, ok := target.(NotFoundError)
-	return ok
-}
-
-const ErrNotFound NotFoundError = 0
-
-type NestingOverflowError byte
-
-func (err NestingOverflowError) Error() string {
-	return "nesting level overflow"
-}
-
-func (err NestingOverflowError) Is(target error) bool {
-	_, ok := target.(NestingOverflowError)
-	return ok
-}
-
-const ErrNestingOverflow NestingOverflowError = 0
+var (
+	ErrNotFound        = errors.New("not found")
+	ErrNestingOverflow = errors.New("nesting level overflow")
+)
